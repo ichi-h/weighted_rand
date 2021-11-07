@@ -1,0 +1,19 @@
+[package]
+name = "weighted_rand"
+version = "0.1.0"
+authors = ["Ichi Hazuki <ichi.h3@gmail.com>"]
+description = "A weighted random sampling crate using Walker's Alias Method."
+documentation = "https://docs.rs/weighted_rand"
+homepage = "https://github.com/ichi-h/weighted_rand"
+repository = "https://github.com/ichi-h/weighted_rand"
+keywords = ["random", "weighted", "walker", "alias", "method"]
+categories = ["algorithms"]
+license = "MIT OR Apache-2.0"
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0"
+serde = { version="1.0", features = ["derive"] }
+rand = "0.8"
