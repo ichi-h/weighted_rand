@@ -2,7 +2,7 @@
 
 [![weighted_rand](https://github.com/ichi-h/weighted_rand/actions/workflows/weighted_rand.yml/badge.svg)](https://github.com/ichi-h/weighted_rand/actions/workflows/weighted_rand.yml)
 [![Crates.io](https://img.shields.io/crates/v/weighted_rand)](https://crates.io/crates/weighted_rand)
-[![docs.rs](https://img.shields.io/docsrs/weighted_rand)](https://docs.rs/weighted_rand/0.1.0/weighted_rand/)
+[![docs.rs](https://img.shields.io/docsrs/weighted_rand)](https://docs.rs/weighted_rand)
 [![Crates.io](https://img.shields.io/crates/l/weighted_rand)](LICENSE-APACHE)
 
 A weighted random sampling crate using Walker's Alias Method.
