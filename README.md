@@ -17,7 +17,7 @@ fn main() {
     // Define the weights for each index corresponding
     // to the above list.
     // In the following case, the ratio of each weight
-    // is "2 : 1 : 7 : 0" and, the output probabilities
+    // is "2 : 1 : 7 : 0", and the output probabilities
     // for each index are 0.2, 0.1, 0.7 and 0.
     let index_weights = vec![2, 1, 7, 0];
 
