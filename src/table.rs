@@ -55,34 +55,31 @@ impl WalkerTable {
 mod table_test {
     use crate::builder::WalkerTableBuilder;
 
+    const N: usize = 100_000;
+
+    fn count<T: PartialEq>(vector: &Vec<T>, target: T) -> f32 {
+        vector
+            .iter()
+            .fold(0.0, |acc, cur| if *cur == target { acc + 1.0 } else { acc })
+    }
+
     #[test]
     fn unweighted_random_sampling() {
-        let index_weights = vec![1, 1, 1, 1];
+        let index_weights = vec![0; 4];
         let mut builder = WalkerTableBuilder::new(index_weights);
         let wa_table = builder.build();
-
-        const N: usize = 100_000;
-        const P: f32 = 0.25;
-        const EXPT: f32 = N as f32 * P;
 
         let idxs = (0..N)
             .map(|_| wa_table.next())
             .collect::<Vec<usize>>()
             .to_vec();
 
-        let i_0 = idxs
-            .iter()
-            .fold(0, |acc, cur| if *cur == 0 { acc + 1 } else { acc }) as f32;
-        let i_1 = idxs
-            .iter()
-            .fold(0, |acc, cur| if *cur == 1 { acc + 1 } else { acc }) as f32;
-        let i_2 = idxs
-            .iter()
-            .fold(0, |acc, cur| if *cur == 2 { acc + 1 } else { acc }) as f32;
-        let i_3 = idxs
-            .iter()
-            .fold(0, |acc, cur| if *cur == 3 { acc + 1 } else { acc }) as f32;
+        let i_0 = count(&idxs, 0);
+        let i_1 = count(&idxs, 1);
+        let i_2 = count(&idxs, 2);
+        let i_3 = count(&idxs, 3);
 
+        const EXPT: f32 = N as f32 * 0.25;
         assert!(
             (EXPT * 0.95 < i_0 && i_0 < EXPT * 1.05)
                 && (EXPT * 0.95 < i_1 && i_1 < EXPT * 1.05)
@@ -97,27 +94,17 @@ mod table_test {
         let mut builder = WalkerTableBuilder::new(index_weights);
         let wa_table = builder.build();
 
-        const N: usize = 100_000;
-        const EXPT: [f32; 4] = [N as f32 * 0.2, N as f32 * 0.1, N as f32 * 0.7, 0.0];
-
         let idxs = (0..N)
             .map(|_| wa_table.next())
             .collect::<Vec<usize>>()
             .to_vec();
 
-        let i_0 = idxs
-            .iter()
-            .fold(0, |acc, cur| if *cur == 0 { acc + 1 } else { acc }) as f32;
-        let i_1 = idxs
-            .iter()
-            .fold(0, |acc, cur| if *cur == 1 { acc + 1 } else { acc }) as f32;
-        let i_2 = idxs
-            .iter()
-            .fold(0, |acc, cur| if *cur == 2 { acc + 1 } else { acc }) as f32;
-        let i_3 = idxs
-            .iter()
-            .fold(0, |acc, cur| if *cur == 3 { acc + 1 } else { acc }) as f32;
+        let i_0 = count(&idxs, 0);
+        let i_1 = count(&idxs, 1);
+        let i_2 = count(&idxs, 2);
+        let i_3 = count(&idxs, 3);
 
+        const EXPT: [f32; 4] = [N as f32 * 0.2, N as f32 * 0.1, N as f32 * 0.7, 0.0];
         assert!(
             (EXPT[0] * 0.95 < i_0 && i_0 < EXPT[0] * 1.05)
                 && (EXPT[1] * 0.95 < i_1 && i_1 < EXPT[1] * 1.05)
