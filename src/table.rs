@@ -25,7 +25,7 @@ pub struct WalkerTable {
     thresholds: Vec<u32>,
 
     /// Maximum threshold value
-    pub max_thold: u32,
+    max_thold: u32,
 }
 
 impl WalkerTable {
