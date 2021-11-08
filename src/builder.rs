@@ -141,4 +141,15 @@ mod builder_test {
 
         assert_eq!(w_table, expected)
     }
+
+    #[test]
+    fn when_sum_is_zero() {
+        let index_weights = vec![0; 5];
+        let mut builder = WalkerTableBuilder::new(index_weights);
+        let w_table = builder.build();
+
+        let expected = WalkerTable::new(vec![0; 5], vec![0; 5], 1);
+
+        assert_eq!(w_table, expected)
+    }
 }
