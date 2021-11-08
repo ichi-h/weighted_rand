@@ -48,9 +48,11 @@ impl WalkerTableBuilder {
         let table_len = self.index_weights.len();
 
         if self.sum() == 0 {
+            // Returns WalkerTable that performs unweighted random sampling.
             return WalkerTable::new(vec![0; table_len], vec![0; table_len], 1);
         }
 
+        // Process that the mean of index_weights does not become a float value
         self.index_weights = self
             .index_weights
             .iter()
