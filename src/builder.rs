@@ -43,12 +43,11 @@ pub struct WalkerTableBuilder {
 impl NewBuilder<u32> for WalkerTableBuilder {
     fn new(index_weights: Vec<u32>) -> WalkerTableBuilder {
         let table_len = index_weights.len();
-        let sum = index_weights.iter().fold(0, |acc, cur| acc + cur);
 
         // Process that the mean of index_weights does not become a float value
         let ws = index_weights
             .iter()
-            .map(|w| w * sum * table_len as u32)
+            .map(|w| w * table_len as u32)
             .collect::<Vec<u32>>()
             .to_vec();
 
@@ -143,8 +142,8 @@ mod builder_test {
 
         let expected = WalkerTable::new(
             vec![2, 1, 1, 2, 2, 2, 5, 9, 5, 8],
-            vec![1269, 2209, 1081, 1269, 329, 235, 1739, 799, 47, 658],
-            2209,
+            vec![27, 47, 23, 27, 7, 5, 37, 17, 1, 14],
+            47,
         );
 
         assert_eq!(w_table, expected)
