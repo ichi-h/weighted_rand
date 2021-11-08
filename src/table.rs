@@ -59,7 +59,7 @@ mod table_test {
     fn unweighted_random_sampling() {
         let index_weights = vec![1, 1, 1, 1];
         let mut builder = WalkerTableBuilder::new(index_weights);
-        let wa_table = builder.build().unwrap();
+        let wa_table = builder.build();
 
         const N: usize = 100_000;
         const P: f32 = 0.25;
@@ -95,7 +95,7 @@ mod table_test {
     fn weighted_random_sampling() {
         let index_weights = vec![2, 1, 7, 0];
         let mut builder = WalkerTableBuilder::new(index_weights);
-        let wa_table = builder.build().unwrap();
+        let wa_table = builder.build();
 
         const N: usize = 100_000;
         const EXPT: [f32; 4] = [N as f32 * 0.2, N as f32 * 0.1, N as f32 * 0.7, 0.0];

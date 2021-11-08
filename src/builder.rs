@@ -1,8 +1,6 @@
 //! Builds a [`WalkerTable`] instance.
 
-use crate::error::WeightedRandError;
 use crate::table::WalkerTable;
-use anyhow::Result;
 
 /// Builder of [`WalkerTable`]
 ///
@@ -14,7 +12,7 @@ use anyhow::Result;
 /// fn main() {
 ///     let index_weights = vec![1, 2, 3, 4];
 ///     let mut builder = WalkerTableBuilder::new(index_weights);
-///     let wa_table = builder.build().unwrap();
+///     let wa_table = builder.build();
 /// }
 /// ```
 ///
@@ -46,12 +44,12 @@ impl WalkerTableBuilder {
     }
 
     /// Builds a new instance of [`WalkerTable`].
-    pub fn build(&mut self) -> Result<WalkerTable> {
-        if self.sum() == 0 {
-            return Err(WeightedRandError::SumWeights)?;
-        }
-
+    pub fn build(&mut self) -> WalkerTable {
         let table_len = self.index_weights.len();
+
+        if self.sum() == 0 {
+            return WalkerTable::new(vec![0; table_len], vec![0; table_len], 1);
+        }
 
         self.index_weights = self
             .index_weights
@@ -62,7 +60,7 @@ impl WalkerTableBuilder {
 
         let (aliases, thresholds) = self.calc_table();
 
-        Ok(WalkerTable::new(aliases, thresholds, self.mean()))
+        WalkerTable::new(aliases, thresholds, self.mean())
     }
 
     /// Calculates the sum of `index_weights`.
@@ -133,7 +131,7 @@ mod builder_test {
     fn make_table() {
         let index_weights = vec![2, 7, 9, 2, 4, 8, 1, 3, 6, 5];
         let mut builder = WalkerTableBuilder::new(index_weights);
-        let w_table = builder.build().unwrap();
+        let w_table = builder.build();
 
         let expected = WalkerTable::new(
             vec![2, 1, 1, 2, 2, 2, 5, 9, 5, 8],
@@ -142,16 +140,5 @@ mod builder_test {
         );
 
         assert_eq!(w_table, expected)
-    }
-
-    #[test]
-    fn sum_error() {
-        let index_weights = vec![0];
-        let mut builder = WalkerTableBuilder::new(index_weights);
-
-        match builder.build() {
-            Err(_) => {}
-            Ok(_) => panic!("'index_weights' with a total of 0 has passed the test."),
-        }
     }
 }

@@ -18,7 +18,7 @@
 //!     let index_weights = vec![2, 1, 7, 0];
 //!
 //!     let mut builder = WalkerTableBuilder::new(index_weights);
-//!     let wa_table = builder.build().unwrap();
+//!     let wa_table = builder.build();
 //!
 //!     for _ in 0..10 {
 //!         let i = wa_table.next(); // Will output 0, 1, or 2
@@ -29,5 +29,4 @@
 //!
 
 pub mod builder;
-pub mod error;
 pub mod table;
