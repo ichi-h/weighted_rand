@@ -4,7 +4,7 @@ use crate::table::WalkerTable;
 
 pub trait NewBuilder<T> {
     /// Creates a new instance of [`WalkerTableBuilder`].
-    fn new(index_weights: Vec<T>) -> WalkerTableBuilder;
+    fn new(index_weights: &Vec<T>) -> WalkerTableBuilder;
 }
 
 /// Builder of [`WalkerTable`]
@@ -16,7 +16,7 @@ pub trait NewBuilder<T> {
 ///
 /// fn main() {
 ///     let index_weights = vec![1, 2, 3, 4];
-///     let mut builder = WalkerTableBuilder::new(index_weights);
+///     let builder = WalkerTableBuilder::new(&index_weights);
 ///     let wa_table = builder.build();
 /// }
 /// ```
@@ -41,13 +41,13 @@ pub struct WalkerTableBuilder {
 }
 
 impl NewBuilder<u32> for WalkerTableBuilder {
-    fn new(index_weights: Vec<u32>) -> WalkerTableBuilder {
-        let table_len = index_weights.len();
+    fn new(index_weights: &Vec<u32>) -> WalkerTableBuilder {
+        let table_len = index_weights.len() as u32;
 
         // Process that the mean of index_weights does not become a float value
         let ws = index_weights
             .iter()
-            .map(|w| w * table_len as u32)
+            .map(|w| w * table_len)
             .collect::<Vec<u32>>()
             .to_vec();
 
@@ -57,7 +57,7 @@ impl NewBuilder<u32> for WalkerTableBuilder {
 
 impl WalkerTableBuilder {
     /// Builds a new instance of [`WalkerTable`].
-    pub fn build(&mut self) -> WalkerTable {
+    pub fn build(&self) -> WalkerTable {
         let table_len = self.index_weights.len();
 
         if self.sum() == 0 {
@@ -137,7 +137,7 @@ mod builder_test {
     #[test]
     fn make_table() {
         let index_weights = vec![2, 7, 9, 2, 4, 8, 1, 3, 6, 5];
-        let mut builder = WalkerTableBuilder::new(index_weights);
+        let builder = WalkerTableBuilder::new(&index_weights);
         let w_table = builder.build();
 
         let expected = WalkerTable::new(
@@ -152,7 +152,7 @@ mod builder_test {
     #[test]
     fn when_sum_is_zero() {
         let index_weights = vec![0; 5];
-        let mut builder = WalkerTableBuilder::new(index_weights);
+        let builder = WalkerTableBuilder::new(&index_weights);
         let w_table = builder.build();
 
         let expected = WalkerTable::new(vec![0; 5], vec![0; 5], 1);
