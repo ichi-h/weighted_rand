@@ -53,7 +53,7 @@ impl WalkerTable {
 
 #[cfg(test)]
 mod table_test {
-    use crate::builder::WalkerTableBuilder;
+    use crate::builder::*;
 
     const N: usize = 100_000;
 

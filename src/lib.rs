@@ -10,7 +10,7 @@
 //! ## Example
 //!
 //! ```rust
-//! use weighted_rand::builder::WalkerTableBuilder;
+//! use weighted_rand::builder::*;
 //!
 //! fn main() {
 //!     let fruit = ["Apple", "Banana", "Orange", "Peach"];

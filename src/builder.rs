@@ -2,12 +2,17 @@
 
 use crate::table::WalkerTable;
 
+pub trait NewBuilder<T> {
+    /// Creates a new instance of [`WalkerTableBuilder`].
+    fn new(index_weights: Vec<T>) -> WalkerTableBuilder;
+}
+
 /// Builder of [`WalkerTable`]
 ///
 /// ## Example
 ///
 /// ```rust
-/// use weighted_rand::builder::WalkerTableBuilder;
+/// use weighted_rand::builder::*;
 ///
 /// fn main() {
 ///     let index_weights = vec![1, 2, 3, 4];
@@ -35,14 +40,23 @@ pub struct WalkerTableBuilder {
     index_weights: Vec<u32>,
 }
 
-impl WalkerTableBuilder {
-    /// Creates a new instance of [`WalkerTableBuilder`].
-    pub fn new(index_weights: Vec<u32>) -> WalkerTableBuilder {
-        WalkerTableBuilder {
-            index_weights: index_weights,
-        }
-    }
+impl NewBuilder<u32> for WalkerTableBuilder {
+    fn new(index_weights: Vec<u32>) -> WalkerTableBuilder {
+        let table_len = index_weights.len();
+        let sum = index_weights.iter().fold(0, |acc, cur| acc + cur);
 
+        // Process that the mean of index_weights does not become a float value
+        let ws = index_weights
+            .iter()
+            .map(|w| w * sum * table_len as u32)
+            .collect::<Vec<u32>>()
+            .to_vec();
+
+        WalkerTableBuilder { index_weights: ws }
+    }
+}
+
+impl WalkerTableBuilder {
     /// Builds a new instance of [`WalkerTable`].
     pub fn build(&mut self) -> WalkerTable {
         let table_len = self.index_weights.len();
@@ -51,14 +65,6 @@ impl WalkerTableBuilder {
             // Returns WalkerTable that performs unweighted random sampling.
             return WalkerTable::new(vec![0; table_len], vec![0; table_len], 1);
         }
-
-        // Process that the mean of index_weights does not become a float value
-        self.index_weights = self
-            .index_weights
-            .iter()
-            .map(|w| w * self.sum() * table_len as u32)
-            .collect::<Vec<u32>>()
-            .to_vec();
 
         let (aliases, thresholds) = self.calc_table();
 
@@ -126,7 +132,7 @@ impl WalkerTableBuilder {
 
 #[cfg(test)]
 mod builder_test {
-    use crate::builder::WalkerTableBuilder;
+    use crate::builder::*;
     use crate::table::WalkerTable;
 
     #[test]
