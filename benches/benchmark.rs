@@ -4,6 +4,8 @@ use weighted_rand::builder::*;
 use criterion::Criterion;
 use criterion::{criterion_group, criterion_main};
 
+const WEIGHTS: [u32; 1000] = [1; 1000];
+
 fn bench_constructor(c: &mut Criterion) {
     let vector = WEIGHTS.to_vec();
     c.bench_function("constructor", |b| {
