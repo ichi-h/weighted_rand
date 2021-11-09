@@ -22,6 +22,12 @@ pub trait NewBuilder<T> {
 /// }
 /// ```
 ///
+/// Also, `index_weiaghts` supports [`Vec<f32>`], like:
+///
+/// ```rust
+/// let index_weights = vec![0.1, 0.2, 0.3, 0.4];
+/// ```
+///
 /// ## About `index_weights`
 ///
 /// `index_weights` is the weights of the output indexes.
@@ -33,9 +39,6 @@ pub trait NewBuilder<T> {
 /// for each index are 0.2, 0.1, 0.7 and 0. If a weight value is 0, the
 /// corresponding index will not be output. In other words, the index 3 will
 /// not be output in the this cases.
-///
-/// The reason why the type is [`u32`] is because it is non-negative, and
-/// can counter arithmetic error of floating point.
 pub struct WalkerTableBuilder {
     /// Weights of the output indexes.
     index_weights: Vec<u32>,

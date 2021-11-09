@@ -32,6 +32,12 @@
 //! }
 //! ```
 //!
+//! Also, `index_weiaghts` supports [`Vec<f32>`], like:
+//!
+//! ```rust
+//! let index_weights = vec![0.2, 0.1, 0.7, 0.0];
+//! ```
+//!
 
 pub mod builder;
 pub mod table;
