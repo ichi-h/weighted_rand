@@ -29,7 +29,7 @@ fn bench_generate_by_wam(c: &mut Criterion) {
 fn bench_generate_by_cdf(c: &mut Criterion) {
     let mut probs = Vec::new();
     for i in 0..1000 {
-        probs.push(i);
+        probs.push(i + 1);
     }
     let probs = probs
         .iter()
@@ -39,10 +39,12 @@ fn bench_generate_by_cdf(c: &mut Criterion) {
 
     let cdf = CDF { probs: probs };
 
+    let mut rng = rand::thread_rng();
+
     c.bench_function("generate_by_cdf", |b| {
         b.iter(|| {
             for _ in 0..100_000 {
-                cdf.next();
+                cdf.next(&mut rng);
             }
         })
     });
@@ -102,8 +104,8 @@ struct CDF {
 }
 
 impl CDF {
-    fn next(&self) -> usize {
-        let r = rand::thread_rng().gen::<f32>();
+    fn next(&self, rng: &mut ThreadRng) -> usize {
+        let r = rng.gen::<f32>();
         let mut result = 0;
 
         for (i, p) in self.probs.iter().enumerate() {
