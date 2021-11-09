@@ -1,7 +1,7 @@
 use weighted_rand::builder::*;
 
 fn main() {
-    // Coins with a 5% higher probability of heads than tails
+    // Coin with a 5% higher probability of heads than tails
     let cheating_coin = ["Heads!", "Tails!"];
     let index_weights = vec![0.55, 0.45];
 
