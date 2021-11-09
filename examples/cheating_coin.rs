@@ -1,3 +1,4 @@
+use rand;
 use weighted_rand::builder::*;
 
 fn main() {
@@ -8,8 +9,15 @@ fn main() {
     let builder = WalkerTableBuilder::new(&index_weights);
     let wa_table = builder.build();
 
-    for _ in 0..10 {
-        let i = wa_table.next();
-        println!("{}", cheating_coin[i]);
+    // If you want to process something in a large number of
+    // loops, we recommend using an external ThreadRng instance
+    // from the next_rng method.
+    let mut result = [""; 10000];
+    let mut rng = rand::thread_rng();
+    for r in &mut result {
+        let j = wa_table.next_rng(&mut rng);
+        *r = cheating_coin[j];
     }
+
+    // println!("{:?}", result);
 }
