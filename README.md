@@ -36,12 +36,32 @@ fn main() {
     // for each index are 0.2, 0.1, 0.7 and 0.
     let index_weights = vec![2, 1, 7, 0];
 
-    let mut builder = WalkerTableBuilder::new(index_weights);
+    let builder = WalkerTableBuilder::new(&index_weights);
     let wa_table = builder.build();
 
     for _ in 0..10 {
         let i = wa_table.next(); // Will output 0, 1, or 2
         println!("{}", fruit[i]);
+    }
+}
+```
+
+Also, `index_weiaghts` supports `Vec<f32>`, like:
+
+```rust
+use weighted_rand::builder::*;
+
+fn main() {
+    // Coins with a 5% higher probability of heads than tails
+    let cheating_coin = ["Heads!", "Tails!"];
+    let index_weights = vec![0.55, 0.45];
+
+    let builder = WalkerTableBuilder::new(&index_weights);
+    let wa_table = builder.build();
+
+    for _ in 0..10 {
+        let i = wa_table.next();
+        println!("{}", cheating_coin[i]);
     }
 }
 ```

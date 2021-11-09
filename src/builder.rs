@@ -1,20 +1,28 @@
 //! Builds a [`WalkerTable`] instance.
 
 use crate::table::WalkerTable;
+use crate::util::math::gcd_for_vec;
+
+pub trait NewBuilder<T> {
+    /// Creates a new instance of [`WalkerTableBuilder`].
+    fn new(index_weights: &Vec<T>) -> WalkerTableBuilder;
+}
 
 /// Builder of [`WalkerTable`]
 ///
 /// ## Example
 ///
 /// ```rust
-/// use weighted_rand::builder::WalkerTableBuilder;
+/// use weighted_rand::builder::*;
 ///
 /// fn main() {
 ///     let index_weights = vec![1, 2, 3, 4];
-///     let mut builder = WalkerTableBuilder::new(index_weights);
+///     let builder = WalkerTableBuilder::new(&index_weights);
 ///     let wa_table = builder.build();
 /// }
 /// ```
+///
+/// Also, `index_weiaghts` supports [`Vec<f32>`], like `vec![0.1, 0.2, 0.3, 0.4]`
 ///
 /// ## About `index_weights`
 ///
@@ -27,38 +35,57 @@ use crate::table::WalkerTable;
 /// for each index are 0.2, 0.1, 0.7 and 0. If a weight value is 0, the
 /// corresponding index will not be output. In other words, the index 3 will
 /// not be output in the this cases.
-///
-/// The reason why the type is [`u32`] is because it is non-negative, and
-/// can counter arithmetic error of floating point.
 pub struct WalkerTableBuilder {
     /// Weights of the output indexes.
     index_weights: Vec<u32>,
 }
 
-impl WalkerTableBuilder {
-    /// Creates a new instance of [`WalkerTableBuilder`].
-    pub fn new(index_weights: Vec<u32>) -> WalkerTableBuilder {
-        WalkerTableBuilder {
-            index_weights: index_weights,
-        }
-    }
+impl NewBuilder<u32> for WalkerTableBuilder {
+    fn new(index_weights: &Vec<u32>) -> WalkerTableBuilder {
+        let table_len = index_weights.len() as u32;
 
+        // Process that the mean of index_weights does not become a float value
+        let ws = index_weights
+            .iter()
+            .map(|w| w * table_len)
+            .collect::<Vec<u32>>()
+            .to_vec();
+
+        WalkerTableBuilder { index_weights: ws }
+    }
+}
+
+impl NewBuilder<f32> for WalkerTableBuilder {
+    fn new(index_weights: &Vec<f32>) -> WalkerTableBuilder {
+        let table_len = index_weights.len() as u32;
+
+        let ws = index_weights
+            .iter()
+            .map(|w| (w * 10000.0).round() as u32)
+            .collect::<Vec<u32>>()
+            .to_vec();
+
+        let gcd = gcd_for_vec(&ws);
+        let ws = ws
+            .iter()
+            .map(|w| w / gcd)
+            .map(|w| w * table_len)
+            .collect::<Vec<u32>>()
+            .to_vec();
+
+        WalkerTableBuilder { index_weights: ws }
+    }
+}
+
+impl WalkerTableBuilder {
     /// Builds a new instance of [`WalkerTable`].
-    pub fn build(&mut self) -> WalkerTable {
+    pub fn build(&self) -> WalkerTable {
         let table_len = self.index_weights.len();
 
         if self.sum() == 0 {
             // Returns WalkerTable that performs unweighted random sampling.
             return WalkerTable::new(vec![0; table_len], vec![0; table_len], 1);
         }
-
-        // Process that the mean of index_weights does not become a float value
-        self.index_weights = self
-            .index_weights
-            .iter()
-            .map(|w| w * self.sum() * table_len as u32)
-            .collect::<Vec<u32>>()
-            .to_vec();
 
         let (aliases, thresholds) = self.calc_table();
 
@@ -126,20 +153,31 @@ impl WalkerTableBuilder {
 
 #[cfg(test)]
 mod builder_test {
-    use crate::builder::WalkerTableBuilder;
+    use crate::builder::*;
     use crate::table::WalkerTable;
 
     #[test]
-    fn make_table() {
+    fn make_table_from_u32() {
         let index_weights = vec![2, 7, 9, 2, 4, 8, 1, 3, 6, 5];
-        let mut builder = WalkerTableBuilder::new(index_weights);
+        let builder = WalkerTableBuilder::new(&index_weights);
         let w_table = builder.build();
 
         let expected = WalkerTable::new(
             vec![2, 1, 1, 2, 2, 2, 5, 9, 5, 8],
-            vec![1269, 2209, 1081, 1269, 329, 235, 1739, 799, 47, 658],
-            2209,
+            vec![27, 47, 23, 27, 7, 5, 37, 17, 1, 14],
+            47,
         );
+
+        assert_eq!(w_table, expected)
+    }
+
+    #[test]
+    fn make_table_from_f32() {
+        let index_weights = vec![0.1, 0.2, 0.3, 0.4];
+        let builder = WalkerTableBuilder::new(&index_weights);
+        let w_table = builder.build();
+
+        let expected = WalkerTable::new(vec![3, 3, 2, 2], vec![6, 2, 10, 2], 10);
 
         assert_eq!(w_table, expected)
     }
@@ -147,7 +185,7 @@ mod builder_test {
     #[test]
     fn when_sum_is_zero() {
         let index_weights = vec![0; 5];
-        let mut builder = WalkerTableBuilder::new(index_weights);
+        let builder = WalkerTableBuilder::new(&index_weights);
         let w_table = builder.build();
 
         let expected = WalkerTable::new(vec![0; 5], vec![0; 5], 1);
