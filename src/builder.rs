@@ -1,6 +1,7 @@
 //! Builds a [`WalkerTable`] instance.
 
 use crate::table::WalkerTable;
+use crate::util::math::gcd_for_vec;
 
 pub trait NewBuilder<T> {
     /// Creates a new instance of [`WalkerTableBuilder`].
@@ -47,6 +48,28 @@ impl NewBuilder<u32> for WalkerTableBuilder {
         // Process that the mean of index_weights does not become a float value
         let ws = index_weights
             .iter()
+            .map(|w| w * table_len)
+            .collect::<Vec<u32>>()
+            .to_vec();
+
+        WalkerTableBuilder { index_weights: ws }
+    }
+}
+
+impl NewBuilder<f32> for WalkerTableBuilder {
+    fn new(index_weights: &Vec<f32>) -> WalkerTableBuilder {
+        let table_len = index_weights.len() as u32;
+
+        let ws = index_weights
+            .iter()
+            .map(|w| (w * 10000.0).round() as u32)
+            .collect::<Vec<u32>>()
+            .to_vec();
+
+        let gcd = gcd_for_vec(&ws);
+        let ws = ws
+            .iter()
+            .map(|w| w / gcd)
             .map(|w| w * table_len)
             .collect::<Vec<u32>>()
             .to_vec();
