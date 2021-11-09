@@ -19,7 +19,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
 pub struct WalkerTable {
     /// Alias to another index
-    aliases: Vec<u32>,
+    aliases: Vec<usize>,
 
     /// Threshold for whether to output the index attached to `aliases`.
     thresholds: Vec<u32>,
@@ -30,7 +30,7 @@ pub struct WalkerTable {
 
 impl WalkerTable {
     /// Creates a new instance of [`WalkerTable`].
-    pub fn new(aliases: Vec<u32>, thresholds: Vec<u32>, max_thold: u32) -> WalkerTable {
+    pub fn new(aliases: Vec<usize>, thresholds: Vec<u32>, max_thold: u32) -> WalkerTable {
         WalkerTable {
             aliases: aliases,
             thresholds: thresholds,
@@ -49,7 +49,7 @@ impl WalkerTable {
         let i = rng.gen::<usize>() % self.thresholds.len();
         let r = rng.gen_range(0..self.max_thold);
         if r < self.thresholds[i] {
-            self.aliases[i] as usize
+            self.aliases[i]
         } else {
             i
         }
@@ -75,8 +75,10 @@ mod table_test {
         let builder = WalkerTableBuilder::new(&index_weights);
         let wa_table = builder.build();
 
+        let mut rng = rand::thread_rng();
+
         let idxs = (0..N)
-            .map(|_| wa_table.next())
+            .map(|_| wa_table.next_rng(&mut rng))
             .collect::<Vec<usize>>()
             .to_vec();
 

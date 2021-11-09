@@ -103,7 +103,7 @@ impl WalkerTableBuilder {
     }
 
     /// Returns the tables of aliases and thresholds.
-    fn calc_table(&self) -> (Vec<u32>, Vec<u32>) {
+    fn calc_table(&self) -> (Vec<usize>, Vec<u32>) {
         let table_len = self.index_weights.len();
         let (mut below_vec, mut above_vec) = self.separate_weight();
         let mean = self.mean();
@@ -115,7 +115,7 @@ impl WalkerTableBuilder {
                 Some(below) => {
                     if let Some(above) = above_vec.pop() {
                         let diff = mean - below.1;
-                        aliases[below.0] = above.0 as u32;
+                        aliases[below.0] = above.0 as usize;
                         thresholds[below.0] = diff;
                         if above.1 - diff <= mean {
                             below_vec.push((above.0, above.1 - diff));
@@ -123,7 +123,7 @@ impl WalkerTableBuilder {
                             above_vec.push((above.0, above.1 - diff));
                         }
                     } else {
-                        aliases[below.0] = below.0 as u32;
+                        aliases[below.0] = below.0 as usize;
                         thresholds[below.0] = below.1;
                     }
                 }
