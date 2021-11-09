@@ -38,9 +38,14 @@ impl WalkerTable {
         }
     }
 
-    /// Returns a index at random.
+    /// Returns an index at random.
     pub fn next(&self) -> usize {
         let mut rng = rand::thread_rng();
+        self.next_rng(&mut rng)
+    }
+
+    /// Returns an index at random using an external [`ThreadRng`].
+    pub fn next_rng(&self, rng: &mut ThreadRng) -> usize {
         let i = rng.gen::<usize>() % self.thresholds.len();
         let r = rng.gen_range(0..self.max_thold);
         if r < self.thresholds[i] {
@@ -54,6 +59,7 @@ impl WalkerTable {
 #[cfg(test)]
 mod table_test {
     use crate::builder::*;
+    use rand;
 
     const N: usize = 100_000;
 
