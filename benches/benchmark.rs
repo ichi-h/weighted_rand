@@ -11,16 +11,33 @@ fn bench_constructor(c: &mut Criterion) {
     });
 }
 
-fn bench_generate_by_wam(c: &mut Criterion) {
+fn bench_generate_by_wam_next(c: &mut Criterion) {
+    let builder = WalkerTableBuilder::new(&WEIGHTS.to_vec());
+    let table = builder.build();
+
+    let mut result = [0; 100_000];
+
+    c.bench_function("generate_by_wam_next", |b| {
+        b.iter(|| {
+            for i in 0..100_000 {
+                result[i] = table.next();
+            }
+        })
+    });
+}
+
+fn bench_generate_by_wam_next_rng(c: &mut Criterion) {
     let builder = WalkerTableBuilder::new(&WEIGHTS.to_vec());
     let table = builder.build();
 
     let mut rng = rand::thread_rng();
 
-    c.bench_function("generate_by_wam", |b| {
+    let mut result = [0; 100_000];
+
+    c.bench_function("generate_by_wam_next_rng", |b| {
         b.iter(|| {
-            for _ in 0..100_000 {
-                table.next_rng(&mut rng);
+            for i in 0..100_000 {
+                result[i] = table.next_rng(&mut rng);
             }
         })
     });
@@ -38,13 +55,13 @@ fn bench_generate_by_cdf(c: &mut Criterion) {
         .to_vec();
 
     let cdf = CDF { probs: probs };
-
     let mut rng = rand::thread_rng();
+    let mut result = [0; 100_000];
 
     c.bench_function("generate_by_cdf", |b| {
         b.iter(|| {
-            for _ in 0..100_000 {
-                cdf.next(&mut rng);
+            for i in 0..100_000 {
+                result[i] = cdf.next(&mut rng);
             }
         })
     });
@@ -53,7 +70,8 @@ fn bench_generate_by_cdf(c: &mut Criterion) {
 criterion_group!(
     benches,
     bench_constructor,
-    bench_generate_by_wam,
+    bench_generate_by_wam_next,
+    bench_generate_by_wam_next_rng,
     bench_generate_by_cdf
 );
 criterion_main!(benches);
