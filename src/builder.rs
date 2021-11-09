@@ -22,11 +22,7 @@ pub trait NewBuilder<T> {
 /// }
 /// ```
 ///
-/// Also, `index_weiaghts` supports [`Vec<f32>`], like:
-///
-/// ```rust
-/// let index_weights = vec![0.1, 0.2, 0.3, 0.4];
-/// ```
+/// Also, `index_weiaghts` supports [`Vec<f32>`], like `vec![0.1, 0.2, 0.3, 0.4]`
 ///
 /// ## About `index_weights`
 ///
