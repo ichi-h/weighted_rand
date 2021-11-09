@@ -4,7 +4,7 @@
 
 ### Added
 
-- Implementation of `Vec<f32>` type for `index_weights`. [#2]
+- Implementation of `Vec<f32>` type for `index_weights`. [#2](https://github.com/ichi-h/weighted_rand/pull/2)
 
 ## 0.2.0 - 2021-11-8
 
