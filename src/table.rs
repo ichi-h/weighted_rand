@@ -46,13 +46,12 @@ impl WalkerTable {
 
     /// Returns an index at random using an external [`ThreadRng`].
     pub fn next_rng(&self, rng: &mut ThreadRng) -> usize {
-        let i = rng.gen::<usize>() % self.thresholds.len();
+        let i = rng.gen_range(0..self.thresholds.len());
         let r = rng.gen_range(0..self.max_thold);
         if r < self.thresholds[i] {
-            self.aliases[i]
-        } else {
-            i
+            return self.aliases[i];
         }
+        i
     }
 }
 
