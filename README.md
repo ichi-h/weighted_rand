@@ -18,7 +18,7 @@ Add this to your Cargo.toml:
 
 ```toml
 [dependencies]
-weighted_rand = "0.2.0"
+weighted_rand = "0.3"
 ```
 
 ## Example
