@@ -3,14 +3,14 @@
 use rand::prelude::*;
 use serde::{Deserialize, Serialize};
 
-/// Table of aliases and thresholds
+/// Table of aliases and probabilities
 ///
 /// In Walker's Alias Method, weighted random sampling is performed by the
 /// following operations.
 ///
 /// 1. Get an index "i" randomly.
-/// 2. Get a random value "r" between 0 and `max_thold`
-/// 3. If "r" exceeds the value of `thresholds[i]`, "i" is output as-is. If it
+/// 2. Get a random value "r" between 0 and 1
+/// 3. If "r" exceeds the value of `probs[i]`, "i" is output as-is. If it
 ///    does not, the value of `aliases[i]` (which means the alias to another
 ///    index) is output.
 ///
@@ -21,20 +21,16 @@ pub struct WalkerTable {
     /// Alias to another index
     aliases: Vec<usize>,
 
-    /// Threshold for whether to output the index attached to `aliases`.
-    thresholds: Vec<u32>,
-
-    /// Maximum threshold value
-    max_thold: u32,
+    /// Probability for whether to output the index attached to `aliases`.
+    probs: Vec<f32>,
 }
 
 impl WalkerTable {
     /// Creates a new instance of [`WalkerTable`].
-    pub fn new(aliases: Vec<usize>, thresholds: Vec<u32>, max_thold: u32) -> WalkerTable {
+    pub fn new(aliases: Vec<usize>, probs: Vec<f32>) -> WalkerTable {
         WalkerTable {
             aliases: aliases,
-            thresholds: thresholds,
-            max_thold: max_thold,
+            probs: probs,
         }
     }
 
@@ -46,9 +42,9 @@ impl WalkerTable {
 
     /// Returns an index at random using an external [`ThreadRng`].
     pub fn next_rng(&self, rng: &mut ThreadRng) -> usize {
-        let i = rng.gen_range(0..self.thresholds.len());
-        let r = rng.gen_range(0..self.max_thold);
-        if r < self.thresholds[i] {
+        let i = rng.gen_range(0..self.probs.len());
+        let r = rng.gen::<f32>();
+        if r < self.probs[i] {
             return self.aliases[i];
         }
         i

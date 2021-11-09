@@ -84,12 +84,12 @@ impl WalkerTableBuilder {
 
         if self.sum() == 0 {
             // Returns WalkerTable that performs unweighted random sampling.
-            return WalkerTable::new(vec![0; table_len], vec![0; table_len], 1);
+            return WalkerTable::new(vec![0; table_len], vec![0.0; table_len]);
         }
 
-        let (aliases, thresholds) = self.calc_table();
+        let (aliases, probs) = self.calc_table();
 
-        WalkerTable::new(aliases, thresholds, self.mean())
+        WalkerTable::new(aliases, probs)
     }
 
     /// Calculates the sum of `index_weights`.
@@ -102,21 +102,21 @@ impl WalkerTableBuilder {
         self.sum() / self.index_weights.len() as u32
     }
 
-    /// Returns the tables of aliases and thresholds.
-    fn calc_table(&self) -> (Vec<usize>, Vec<u32>) {
+    /// Returns the tables of aliases and probabilities.
+    fn calc_table(&self) -> (Vec<usize>, Vec<f32>) {
         let table_len = self.index_weights.len();
         let (mut below_vec, mut above_vec) = self.separate_weight();
         let mean = self.mean();
 
         let mut aliases = vec![0; table_len];
-        let mut thresholds = vec![0; table_len];
+        let mut probs = vec![0.0; table_len];
         loop {
             match below_vec.pop() {
                 Some(below) => {
                     if let Some(above) = above_vec.pop() {
                         let diff = mean - below.1;
                         aliases[below.0] = above.0 as usize;
-                        thresholds[below.0] = diff;
+                        probs[below.0] = diff as f32 / mean as f32;
                         if above.1 - diff <= mean {
                             below_vec.push((above.0, above.1 - diff));
                         } else {
@@ -124,14 +124,14 @@ impl WalkerTableBuilder {
                         }
                     } else {
                         aliases[below.0] = below.0 as usize;
-                        thresholds[below.0] = below.1;
+                        probs[below.0] = below.1 as f32 / mean as f32;
                     }
                 }
                 None => break,
             }
         }
 
-        (aliases, thresholds)
+        (aliases, probs)
     }
 
     /// Divide the values of `index_weights` based on the mean of them.
@@ -164,8 +164,18 @@ mod builder_test {
 
         let expected = WalkerTable::new(
             vec![2, 1, 1, 2, 2, 2, 5, 9, 5, 8],
-            vec![27, 47, 23, 27, 7, 5, 37, 17, 1, 14],
-            47,
+            vec![
+                0.574468085106383,
+                1.0,
+                0.48936170212766,
+                0.574468085106383,
+                0.148936170212766,
+                0.106382978723404,
+                0.787234042553192,
+                0.361702127659574,
+                0.0212765957446809,
+                0.297872340425532,
+            ],
         );
 
         assert_eq!(w_table, expected)
@@ -177,7 +187,7 @@ mod builder_test {
         let builder = WalkerTableBuilder::new(&index_weights);
         let w_table = builder.build();
 
-        let expected = WalkerTable::new(vec![3, 3, 2, 2], vec![6, 2, 10, 2], 10);
+        let expected = WalkerTable::new(vec![3, 3, 2, 2], vec![0.6, 0.2, 1.0, 0.2]);
 
         assert_eq!(w_table, expected)
     }
@@ -188,7 +198,7 @@ mod builder_test {
         let builder = WalkerTableBuilder::new(&index_weights);
         let w_table = builder.build();
 
-        let expected = WalkerTable::new(vec![0; 5], vec![0; 5], 1);
+        let expected = WalkerTable::new(vec![0; 5], vec![0.0; 5]);
 
         assert_eq!(w_table, expected)
     }
