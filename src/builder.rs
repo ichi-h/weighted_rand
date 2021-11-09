@@ -135,7 +135,7 @@ mod builder_test {
     use crate::table::WalkerTable;
 
     #[test]
-    fn make_table() {
+    fn make_table_from_u32() {
         let index_weights = vec![2, 7, 9, 2, 4, 8, 1, 3, 6, 5];
         let builder = WalkerTableBuilder::new(&index_weights);
         let w_table = builder.build();
@@ -145,6 +145,17 @@ mod builder_test {
             vec![27, 47, 23, 27, 7, 5, 37, 17, 1, 14],
             47,
         );
+
+        assert_eq!(w_table, expected)
+    }
+
+    #[test]
+    fn make_table_from_f32() {
+        let index_weights = vec![0.1, 0.2, 0.3, 0.4];
+        let builder = WalkerTableBuilder::new(&index_weights);
+        let w_table = builder.build();
+
+        let expected = WalkerTable::new(vec![3, 3, 2, 2], vec![6, 2, 10, 2], 10);
 
         assert_eq!(w_table, expected)
     }
