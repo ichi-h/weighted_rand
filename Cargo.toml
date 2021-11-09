@@ -16,3 +16,10 @@ edition = "2018"
 [dependencies]
 serde = { version="1.0", features = ["derive"] }
 rand = "0.8"
+
+[dev-dependencies]
+criterion = "0.3"
+
+[[bench]]
+name = "benchmark"
+harness = false
