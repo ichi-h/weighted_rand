@@ -10,6 +10,14 @@ A weighted random sampling crate using Walker's Alias Method.
 Walker's Alias Method (WAM) is one method for performing weighted random sampling.  
 WAM weights each index of a array by giving two pieces of information: an alias to a different index and a probability to decide whether to jump to that index.
 
+WAM is a very fast algorithm, and its computational complexity of the search is O(1).  
+The difference in complexity between WAM and the Cumulative Sum Method is as follows.
+
+|       Algorithm       | Building table |  Search  |
+| :-------------------: | :------------: | :------: |
+| Walker's Alias Method |      O(N)      |   O(1)   |
+| Cumulative Sum Method |      O(N)      | O(log N) |
+
 The API documentation is [here](https://docs.rs/weighted_rand).
 
 ## Usage
