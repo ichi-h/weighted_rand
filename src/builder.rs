@@ -138,8 +138,8 @@ impl WalkerTableBuilder {
     ///
     /// The tail value is a weight and head is its index.
     fn separate_weight(&self) -> (Vec<(usize, u32)>, Vec<(usize, u32)>) {
-        let mut below_vec = Vec::new();
-        let mut above_vec = Vec::new();
+        let mut below_vec = Vec::with_capacity(self.index_weights.len());
+        let mut above_vec = Vec::with_capacity(self.index_weights.len());
         for (i, w) in self.index_weights.iter().enumerate() {
             if *w <= self.mean() {
                 below_vec.push((i, *w));
