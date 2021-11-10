@@ -62,7 +62,6 @@ impl NewBuilder<f32> for WalkerTableBuilder {
     fn new(index_weights: &[f32]) -> WalkerTableBuilder {
         let ws = index_weights
             .iter()
-            .map(|w| if 0.0 < *w { *w } else { 0.0 })
             .map(|w| (w * 10000.0).round() as u32)
             .collect::<Vec<u32>>()
             .to_vec();
