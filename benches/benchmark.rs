@@ -21,8 +21,8 @@ fn bench_generate_by_wam_next(c: &mut Criterion) {
 
     c.bench_function("generate_by_wam_next", |b| {
         b.iter(|| {
-            for i in 0..100_000 {
-                result[i] = table.next();
+            for r in &mut result {
+                *r = table.next();
             }
         })
     });
@@ -38,8 +38,8 @@ fn bench_generate_by_wam_next_rng(c: &mut Criterion) {
 
     c.bench_function("generate_by_wam_next_rng", |b| {
         b.iter(|| {
-            for i in 0..100_000 {
-                result[i] = table.next_rng(&mut rng);
+            for r in &mut result {
+                *r = table.next_rng(&mut rng);
             }
         })
     });
@@ -62,8 +62,8 @@ fn bench_generate_by_csm(c: &mut Criterion) {
 
     c.bench_function("generate_by_csm", |b| {
         b.iter(|| {
-            for i in 0..100_000 {
-                result[i] = csm.next(&mut rng);
+            for r in &mut result {
+                *r = csm.next(&mut rng);
             }
         })
     });
