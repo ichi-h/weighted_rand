@@ -183,11 +183,11 @@ mod builder_test {
 
     #[test]
     fn make_table_from_f32() {
-        let index_weights = vec![0.1, 0.2, 0.3, 0.4];
+        let index_weights = vec![0.1, 0.2, 0.3, -0.4];
         let builder = WalkerTableBuilder::new(&index_weights);
         let w_table = builder.build();
 
-        let expected = WalkerTable::new(vec![3, 3, 2, 2], vec![0.6, 0.2, 1.0, 0.2]);
+        let expected = WalkerTable::new(vec![1, 1, 1, 2], vec![0.333333333333333, 1.0, 0.0, 1.0]);
 
         assert_eq!(w_table, expected)
     }
