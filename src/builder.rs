@@ -5,7 +5,7 @@ use crate::util::math::gcd_for_vec;
 
 pub trait NewBuilder<T> {
     /// Creates a new instance of [`WalkerTableBuilder`].
-    fn new(index_weights: &Vec<T>) -> WalkerTableBuilder;
+    fn new(index_weights: &[T]) -> WalkerTableBuilder;
 }
 
 /// Builder of [`WalkerTable`]
@@ -41,7 +41,7 @@ pub struct WalkerTableBuilder {
 }
 
 impl NewBuilder<u32> for WalkerTableBuilder {
-    fn new(index_weights: &Vec<u32>) -> WalkerTableBuilder {
+    fn new(index_weights: &[u32]) -> WalkerTableBuilder {
         let table_len = index_weights.len() as u32;
 
         // Process that the mean of index_weights does not become a float value
@@ -56,7 +56,7 @@ impl NewBuilder<u32> for WalkerTableBuilder {
 }
 
 impl NewBuilder<f32> for WalkerTableBuilder {
-    fn new(index_weights: &Vec<f32>) -> WalkerTableBuilder {
+    fn new(index_weights: &[f32]) -> WalkerTableBuilder {
         let table_len = index_weights.len() as u32;
 
         let ws = index_weights
