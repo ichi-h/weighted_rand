@@ -89,15 +89,12 @@ struct CSM {
 impl CSM {
     fn next(&self, rng: &mut ThreadRng) -> usize {
         let r = rng.gen::<f32>();
-        let mut result = 0;
-
         for (i, p) in self.probs.iter().enumerate() {
             if r <= *p {
-                result = i;
-                break;
+                return i;
             }
         }
 
-        result
+        self.probs.len() - 1
     }
 }
