@@ -74,8 +74,7 @@ mod table_test {
 
         let idxs = (0..N)
             .map(|_| wa_table.next_rng(&mut rng))
-            .collect::<Vec<usize>>()
-            .to_vec();
+            .collect::<Vec<usize>>();
 
         let i_0 = count(&idxs, 0);
         let i_1 = count(&idxs, 1);
@@ -97,10 +96,7 @@ mod table_test {
         let builder = WalkerTableBuilder::new(&index_weights);
         let wa_table = builder.build();
 
-        let idxs = (0..N)
-            .map(|_| wa_table.next())
-            .collect::<Vec<usize>>()
-            .to_vec();
+        let idxs = (0..N).map(|_| wa_table.next()).collect::<Vec<usize>>();
 
         let i_0 = count(&idxs, 0);
         let i_1 = count(&idxs, 1);

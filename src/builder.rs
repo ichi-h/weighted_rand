@@ -51,8 +51,7 @@ impl NewBuilder<u32> for WalkerTableBuilder {
         let ws = index_weights
             .iter()
             .map(|w| w * table_len)
-            .collect::<Vec<u32>>()
-            .to_vec();
+            .collect::<Vec<u32>>();
 
         WalkerTableBuilder { index_weights: ws }
     }
@@ -63,11 +62,10 @@ impl NewBuilder<f32> for WalkerTableBuilder {
         let ws = index_weights
             .iter()
             .map(|w| (w * 10000.0).round() as u32)
-            .collect::<Vec<u32>>()
-            .to_vec();
+            .collect::<Vec<u32>>();
 
         let gcd = gcd_for_slice(&ws);
-        let ws = ws.iter().map(|w| w / gcd).collect::<Vec<u32>>().to_vec();
+        let ws = ws.iter().map(|w| w / gcd).collect::<Vec<u32>>();
 
         WalkerTableBuilder::new(&ws)
     }
