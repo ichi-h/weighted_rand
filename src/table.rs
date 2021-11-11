@@ -58,15 +58,15 @@ mod table_test {
 
     const N: usize = 100_000;
 
-    fn count<T: PartialEq>(vector: &Vec<T>, target: T) -> f32 {
-        vector
+    fn count<T: PartialEq>(slice: &[T], target: T) -> f32 {
+        slice
             .iter()
             .fold(0.0, |acc, cur| if *cur == target { acc + 1.0 } else { acc })
     }
 
     #[test]
     fn unweighted_random_sampling() {
-        let index_weights = vec![0; 4];
+        let index_weights = [0; 4];
         let builder = WalkerTableBuilder::new(&index_weights);
         let wa_table = builder.build();
 
@@ -74,8 +74,7 @@ mod table_test {
 
         let idxs = (0..N)
             .map(|_| wa_table.next_rng(&mut rng))
-            .collect::<Vec<usize>>()
-            .to_vec();
+            .collect::<Vec<usize>>();
 
         let i_0 = count(&idxs, 0);
         let i_1 = count(&idxs, 1);
@@ -93,14 +92,11 @@ mod table_test {
 
     #[test]
     fn weighted_random_sampling() {
-        let index_weights = vec![2, 1, 7, 0];
+        let index_weights = [2, 1, 7, 0];
         let builder = WalkerTableBuilder::new(&index_weights);
         let wa_table = builder.build();
 
-        let idxs = (0..N)
-            .map(|_| wa_table.next())
-            .collect::<Vec<usize>>()
-            .to_vec();
+        let idxs = (0..N).map(|_| wa_table.next()).collect::<Vec<usize>>();
 
         let i_0 = count(&idxs, 0);
         let i_1 = count(&idxs, 1);

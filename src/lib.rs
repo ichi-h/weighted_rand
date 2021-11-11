@@ -29,19 +29,18 @@
 //!     // In the following case, the ratio of each weight
 //!     // is "2 : 1 : 7 : 0", and the output probabilities
 //!     // for each index are 0.2, 0.1, 0.7 and 0.
-//!     let index_weights = vec![2, 1, 7, 0];
+//!     let index_weights = [2, 1, 7, 0];
 //!
 //!     let builder = WalkerTableBuilder::new(&index_weights);
 //!     let wa_table = builder.build();
 //!
-//!     for _ in 0..10 {
-//!         let i = wa_table.next(); // Will output 0, 1, or 2
+//!     for i in (0..10).map(|_| wa_table.next()) {
 //!         println!("{}", fruit[i]);
 //!     }
 //! }
 //! ```
 //!
-//! Also, `index_weiaghts` supports [`Vec<f32>`], like:
+//! Also, `index_weiaghts` supports [`&[f32]`], like:
 //!
 //! ```rust
 //! use rand;
@@ -50,14 +49,14 @@
 //! fn main() {
 //!     // Coin with a 5% higher probability of heads than tails
 //!     let cheating_coin = ["Heads!", "Tails!"];
-//!     let index_weights = vec![0.55, 0.45];
+//!     let index_weights = [0.55, 0.45];
 //!
 //!     let builder = WalkerTableBuilder::new(&index_weights);
 //!     let wa_table = builder.build();
 //!
 //!     // If you want to process something in a large number of
-//!     // loops, we recommend using an external ThreadRng instance
-//!     // from the next_rng method.
+//!     // loops, we recommend using the next_rng method with an
+//!     // external ThreadRng instance.
 //!     let mut result = [""; 10000];
 //!     let mut rng = rand::thread_rng();
 //!     for r in &mut result {

@@ -8,13 +8,12 @@ fn main() {
     // In the following case, the ratio of each weight
     // is "2 : 1 : 7 : 0", and the output probabilities
     // for each index are 0.2, 0.1, 0.7 and 0.
-    let index_weights = vec![2, 1, 7, 0];
+    let index_weights = [2, 1, 7, 0];
 
     let builder = WalkerTableBuilder::new(&index_weights);
     let wa_table = builder.build();
 
-    for _ in 0..10 {
-        let i = wa_table.next(); // Will output 0, 1, or 2
+    for i in (0..10).map(|_| wa_table.next()) {
         println!("{}", fruit[i]);
     }
 }
