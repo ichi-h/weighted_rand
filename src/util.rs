@@ -9,13 +9,13 @@ pub mod math {
         }
     }
 
-    pub fn gcd_for_slice(vector: &[u32]) -> u32 {
-        if vector.is_empty() {
+    pub fn gcd_for_slice(slice: &[u32]) -> u32 {
+        if slice.is_empty() {
             return 0;
         }
 
-        let first = vector[0];
-        vector.iter().fold(
+        let first = slice[0];
+        slice.iter().fold(
             first,
             |acc, cur| {
                 if *cur == 0 {
