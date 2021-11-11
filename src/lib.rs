@@ -55,8 +55,8 @@
 //!     let wa_table = builder.build();
 //!
 //!     // If you want to process something in a large number of
-//!     // loops, we recommend using an external ThreadRng instance
-//!     // from the next_rng method.
+//!     // loops, we recommend using the next_rng method with an
+//!     // external ThreadRng instance.
 //!     let mut result = [""; 10000];
 //!     let mut rng = rand::thread_rng();
 //!     for r in &mut result {
