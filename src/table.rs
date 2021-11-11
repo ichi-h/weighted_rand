@@ -58,8 +58,8 @@ mod table_test {
 
     const N: usize = 100_000;
 
-    fn count<T: PartialEq>(vector: &Vec<T>, target: T) -> f32 {
-        vector
+    fn count<T: PartialEq>(slice: &[T], target: T) -> f32 {
+        slice
             .iter()
             .fold(0.0, |acc, cur| if *cur == target { acc + 1.0 } else { acc })
     }
