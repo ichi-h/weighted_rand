@@ -42,7 +42,7 @@ fn main() {
     // In the following case, the ratio of each weight
     // is "2 : 1 : 7 : 0", and the output probabilities
     // for each index are 0.2, 0.1, 0.7 and 0.
-    let index_weights = vec![2, 1, 7, 0];
+    let index_weights = [2, 1, 7, 0];
 
     let builder = WalkerTableBuilder::new(&index_weights);
     let wa_table = builder.build();
@@ -54,7 +54,7 @@ fn main() {
 }
 ```
 
-Also, `index_weiaghts` supports `Vec<f32>`, like:
+Also, `index_weiaghts` supports `&[f32]`, like:
 
 ```rust
 use rand;
@@ -63,7 +63,7 @@ use weighted_rand::builder::*;
 fn main() {
     // Coin with a 5% higher probability of heads than tails
     let cheating_coin = ["Heads!", "Tails!"];
-    let index_weights = vec![0.55, 0.45];
+    let index_weights = [0.55, 0.45];
 
     let builder = WalkerTableBuilder::new(&index_weights);
     let wa_table = builder.build();

@@ -4,7 +4,7 @@ use weighted_rand::builder::*;
 fn main() {
     // Coin with a 5% higher probability of heads than tails
     let cheating_coin = ["Heads!", "Tails!"];
-    let index_weights = vec![0.55, 0.45];
+    let index_weights = [0.55, 0.45];
 
     let builder = WalkerTableBuilder::new(&index_weights);
     let wa_table = builder.build();

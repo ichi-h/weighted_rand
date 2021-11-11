@@ -66,7 +66,7 @@ mod table_test {
 
     #[test]
     fn unweighted_random_sampling() {
-        let index_weights = vec![0; 4];
+        let index_weights = [0; 4];
         let builder = WalkerTableBuilder::new(&index_weights);
         let wa_table = builder.build();
 
@@ -93,7 +93,7 @@ mod table_test {
 
     #[test]
     fn weighted_random_sampling() {
-        let index_weights = vec![2, 1, 7, 0];
+        let index_weights = [2, 1, 7, 0];
         let builder = WalkerTableBuilder::new(&index_weights);
         let wa_table = builder.build();
 
