@@ -40,8 +40,8 @@ impl WalkerTable {
         self.next_rng(&mut rng)
     }
 
-    /// Returns an index at random using an external [`ThreadRng`].
-    pub fn next_rng(&self, rng: &mut ThreadRng) -> usize {
+    /// Returns an index at random using an external RNG which implements Rng.
+    pub fn next_rng(&self, rng: &mut impl Rng) -> usize {
         let i = rng.gen_range(0..self.probs.len());
         let r = rng.gen::<f32>();
         if r < self.probs[i] {
