@@ -16,7 +16,7 @@ use serde::{Deserialize, Serialize};
 ///
 /// The more likely a particular index is to be output, the more of the value
 /// will be included in `aliases`.
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Default)]
 pub struct WalkerTable {
     /// Alias to another index
     aliases: Vec<usize>,
