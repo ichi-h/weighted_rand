@@ -1,7 +1,7 @@
 [package]
 name = "weighted_rand"
-version = "0.3.2"
-authors = ["Ichi Hazuki <ichi.h3@gmail.com>"]
+version = "0.4.0"
+authors = ["Ichi <ichi.h3@gmail.com>"]
 description = "A weighted random sampling crate using Walker's Alias Method."
 documentation = "https://docs.rs/weighted_rand"
 homepage = "https://github.com/ichi-h/weighted_rand"
