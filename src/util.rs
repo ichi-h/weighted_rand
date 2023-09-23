@@ -15,7 +15,7 @@ pub mod math {
         }
 
         let first = slice[0];
-        slice.iter().fold(
+        let gcd = slice.iter().fold(
             first,
             |acc, cur| {
                 if *cur == 0 {
@@ -24,7 +24,12 @@ pub mod math {
                     gcd(*cur, acc)
                 }
             },
-        )
+        );
+        if gcd == 0 {
+            1
+        } else {
+            gcd
+        }
     }
 }
 
