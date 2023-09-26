@@ -14,13 +14,8 @@ pub mod math {
             return 0;
         }
 
-        let mut iter = slice.iter().skip_while(|x| x == &&0);
-        let first = match iter.next() {
-            Some(v) => *v,
-            None => return 1
-        };
-
-        let gcd = iter.fold(
+        let first = slice[0];
+        let gcd = slice.iter().fold(
             first,
             |acc, cur| {
                 if *cur == 0 {
@@ -30,7 +25,11 @@ pub mod math {
                 }
             },
         );
-        gcd
+        if gcd == 0 {
+            1
+        } else {
+            gcd
+        }
     }
 }
 
