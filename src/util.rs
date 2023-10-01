@@ -14,7 +14,6 @@ pub mod math {
             return 0;
         }
 
-        let first = slice[0];
         let mut iter = slice.iter().skip_while(|x| x == &&0);
         let first = match iter.next() {
             Some(v) => *v,
