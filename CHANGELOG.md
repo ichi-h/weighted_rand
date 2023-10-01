@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.4.2 - 2023-10-2
+
+### Changes
+
+- [#5](https://github.com/ichi-h/weighted_rand/pull/5) Thanks [@DanArmor](https://github.com/DanArmor)! - fix: return 1 for gcd_for_slice if all elements are 0.0
+
 ## 0.4.1 - 2023-7-3
 
 ### Changes
