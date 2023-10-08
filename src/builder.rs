@@ -86,6 +86,7 @@ impl WalkerTableBuilder {
         WalkerTable::new(aliases, probs)
     }
 
+    /// Inverses given weights
     pub fn inverse(self) -> WalkerTableBuilder {
         let min_value = match self.index_weights.iter().min() {
             Some(v) => *v,
