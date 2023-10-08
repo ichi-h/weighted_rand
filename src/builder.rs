@@ -86,6 +86,33 @@ impl WalkerTableBuilder {
         WalkerTable::new(aliases, probs)
     }
 
+    /// Inverses given weights
+    pub fn inverse(self) -> WalkerTableBuilder {
+        let min_value = match self.index_weights.iter().min() {
+            Some(v) => *v,
+            None => 0,
+        };
+        let max_value = match self.index_weights.iter().max() {
+            Some(v) => *v,
+            None => 0,
+        };
+        Self {
+            index_weights: self
+                .index_weights
+                .into_iter()
+                .map(|x| {
+                    if x == max_value {
+                        min_value
+                    } else if x == min_value {
+                        max_value
+                    } else {
+                        max_value - x
+                    }
+                })
+                .collect(),
+        }
+    }
+
     /// Calculates the sum of `index_weights`.
     fn sum(&self) -> u32 {
         self.index_weights.iter().fold(0, |acc, cur| acc + cur)
