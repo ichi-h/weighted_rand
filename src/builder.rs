@@ -96,7 +96,7 @@ impl WalkerTableBuilder {
             None => 0
         };
         Self {
-            index_weights: self.index_weights.into_iter().map(|x| max_value + min_value - x).collect()
+            index_weights: self.index_weights.into_iter().map(|x| max_value - x + min_value).collect()
         } 
     }
 
